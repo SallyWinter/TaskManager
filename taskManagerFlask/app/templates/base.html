@@ -1,0 +1,22 @@
+<html>
+    <head>
+
+        <link rel="stylesheet" href="/static/CSS/navbarstyle.css">
+        <title>Forms</title>
+
+
+        
+    </head>
+    <body>
+        <div id = navbar>
+            <a class="active" href="{{ url_for('index') }}">Home</a>
+            {% if current_user.is_anonymous %}
+            <a href="{{ url_for('login') }}">Login</a>
+            {% else %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
+        </div>
+
+        {% block content %}{% endblock %}
+    </body>
+</html>

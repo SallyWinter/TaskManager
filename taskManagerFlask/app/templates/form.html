@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="/static/CSS/formstyle.css">
+
+    <form action="/index" method="post">
+        {% for question in questions %}
+            <h2>{{ question.body }}</h2>
+
+            <input type="radio" id="{{ question.id }}" name="{{ question.id }}" value="1" required>
+            <label for="{{ question.id }}">{{ question.option1 }}</label><br>
+
+            <input type="radio" id="{{ question.id }}" name="{{ question.id }}" value="2" required>
+            <label for="{{ question.id }}">{{ question.option2 }}</label><br>
+            
+            <input type="radio" id="{{ question.id }}" name="{{ question.id }}" value="3" required>
+            <label for="{{ question.id }}">{{ question.option3 }}</label><br>
+
+            <input type="radio" id="{{ question.id }}" name="{{ question.id }}" value="4" required>
+            <label for="{{ question.id }}">{{ question.option4 }}</label><hr>
+        {% endfor %}
+
+        <input type="submit" value="Insend svar" />
+    </form>
+{% endblock %}
