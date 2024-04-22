@@ -1,26 +1,73 @@
+<!DOCTYPE html>
 {% extends "base.html" %}
 
 {% block content %}
 
 <link rel="stylesheet" href="/static/CSS/formstyle.css">
 
-    <form action="/index" method="post">
-        {% for question in questions %}
-            <h2>{{ question.body }}</h2>
+<br>
 
-            <input type="radio" id="{{ question.id }}" name="{{ question.id }}" value="1" required>
-            <label for="{{ question.id }}">{{ question.option1 }}</label><br>
 
-            <input type="radio" id="{{ question.id }}" name="{{ question.id }}" value="2" required>
-            <label for="{{ question.id }}">{{ question.option2 }}</label><br>
-            
-            <input type="radio" id="{{ question.id }}" name="{{ question.id }}" value="3" required>
-            <label for="{{ question.id }}">{{ question.option3 }}</label><br>
 
-            <input type="radio" id="{{ question.id }}" name="{{ question.id }}" value="4" required>
-            <label for="{{ question.id }}">{{ question.option4 }}</label><hr>
-        {% endfor %}
 
-        <input type="submit" value="Insend svar" />
-    </form>
+
+
+<html>
+<body>
+    <h1>Local Date and Time:</h1>
+    <p>{{ current_datetime }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            <tr>
+                <tbody id="time-slots">
+
+            </tr>
+
+            <tr>
+
+            </tr>
+
+        </tbody>
+    </table>
+
+    <script>
+        // Function to generate time slots with 30 minutes gap
+        function generateTimeSlots() {
+            var tbody = document.getElementById("time-slots");
+            var startTime = 7; // Starting hour (07:00)
+            var endTime = 19; // Ending hour (19:00)
+
+            for (var hour = startTime; hour <= endTime; hour++) {
+                for (var minute = 0; minute < 60; minute += 60) {
+                    var time = (hour < 10 ? "0" + hour : hour) + ":" + (minute === 0 ? "00" : minute);
+                    var row = document.createElement("tr");
+                    var cell = document.createElement("td");
+                    cell.className = "time-slot";
+                    cell.textContent = time;
+                    row.appendChild(cell);
+                    tbody.appendChild(row);
+                }
+            }
+        }
+
+        // Call the function to generate time slots when the page loads
+        generateTimeSlots();
+    </script>
+
+
+</body>
+</html>
 {% endblock %}
