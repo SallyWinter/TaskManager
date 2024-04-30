@@ -18,26 +18,11 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
     
 
-class Questions(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(140))
-    
-    option1 = db.Column(db.String(140))
-    option2 = db.Column(db.String(140))
-    option3 = db.Column(db.String(140))
-    option4 = db.Column(db.String(140))
-
-    answers_option1 = db.Column(db.Integer)
-    answers_option2 = db.Column(db.Integer)
-    answers_option3 = db.Column(db.Integer)
-    answers_option4 = db.Column(db.Integer)
 
 
     def __repr__(self):
         return '<Questions {}>'.format(self.body)
 
-
-        
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
