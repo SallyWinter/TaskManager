@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db # type: ignore
 from app.login import LoginForm, RegistrationForm # type: ignore
-from app.models import User # type: ignore
+from app.models import User, Event # type: ignore
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse 
 
@@ -16,7 +16,7 @@ def index():
 
     if request.method == 'GET':
         test2 = User.query.all()
-        return render_template('form.html', test2=test2)
+        return render_template('calender.html', test2=test2)
     
 
         
@@ -61,16 +61,18 @@ def register():
 
 @app.route('/add_task', methods=['GET', 'POST'])
 def add_task():
-    form = TaskForm()
+    form = Event()
     if form.validate_on_submit():
         task = Task(
             name=form.name.data,
             description=form.description.data,
-            date=form.date.data,
-            time=form.time.data
+            startDate=form.startDateTime.data,
+            endDate=form.endDateTime.data,
+            users=form.users.data,
+            admins=form.admins.data,
         )
         db.session.add(task)
         db.session.commit()
         flash('Task added successfully!', 'success')
         return redirect(url_for('calendar'))
-    return render_template('add_task.html', form=form)
+    return render_template('index.html', form=form)
