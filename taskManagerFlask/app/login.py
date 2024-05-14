@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, DateField, TimeField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from app.models import User
+from app.models import User # type: ignore
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -27,8 +27,3 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
         
-class taskForm(FlaskForm):
-    name = StringField('Task Name', validators=[DataRequired()])
-    description = TextAreaField('Description')
-    date = DateField('Date', validators=[DataRequired()])
-    time = TimeField('Time', validators=[DataRequired()])

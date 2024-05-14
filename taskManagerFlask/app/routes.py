@@ -1,23 +1,22 @@
 from flask import render_template, flash, redirect, url_for, request
-from app import app, db
-from app.login import LoginForm, RegistrationForm
+from app import app, db # type: ignore
+from app.login import LoginForm, RegistrationForm # type: ignore
+from app.models import User # type: ignore
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
 from werkzeug.urls import url_parse 
-from datetime import datetime
 
 @app.route('/')
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 
 def index():
-    current_datetime = datetime.now()  # Get current local date and time
 
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
     if request.method == 'GET':
-        return render_template('form.html', current_datetime=current_datetime)
+        test2 = User.query.all()
+        return render_template('form.html', test2=test2)
     
 
         

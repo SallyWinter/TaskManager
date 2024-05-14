@@ -5,69 +5,98 @@
 
 <link rel="stylesheet" href="/static/CSS/formstyle.css">
 
-<br>
-
-
-
-
-
-
 <html>
-<body>
-    <h1>Local Date and Time:</h1>
-    <p>{{ current_datetime }}</p>
+<head>
+    <br>
+<script src='/static/JS/index.global.js'></script>
+<script>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Time</th>
-                <th>Monday</th>
-                <th>Tuesday</th>
-                <th>Wednesday</th>
-                <th>Thursday</th>
-                <th>Friday</th>
-            </tr>
-        </thead>
-        <tbody>
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
 
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+      },
+    
+      navLinks: true, // can click day/week names to navigate views
+      businessHours: true, // display business hours
+      editable: true,
+      selectable: true,
+      firstDay: 1,
+      events: [
+        {
+          title: 'Det er første maj i dag',
+          start: '2024-05-01T13:00:00',
+          constraint: 'businessHours'
+        },
+        {
+          title: 'Meeting',
+          start: '2023-01-13T11:00:00',
+          constraint: 'availableForMeeting', // defined below
+          color: '#257e4a'
+        },
+        {
+          title: 'Conference',
+          start: '2023-01-18',
+          end: '2023-01-20'
+        },
+        {
+          title: 'Party',
+          start: '2023-01-29T20:00:00'
+        },
 
-            <tr>
-                <tbody id="time-slots">
+        // areas where "Meeting" must be dropped
+        {
+          groupId: 'availableForMeeting',
+          start: '2023-01-11T10:00:00',
+          end: '2023-01-11T16:00:00',
+          display: 'background'
+        },
+        {
+          groupId: 'availableForMeeting',
+          start: '2023-01-13T10:00:00',
+          end: '2023-01-13T16:00:00',
+          display: 'background'
+        },
 
-            </tr>
-
-            <tr>
-
-            </tr>
-
-        </tbody>
-    </table>
-
-    <script>
-        // Function to generate time slots with 30 minutes gap
-        function generateTimeSlots() {
-            var tbody = document.getElementById("time-slots");
-            var startTime = 7; // Starting hour (07:00)
-            var endTime = 19; // Ending hour (19:00)
-
-            for (var hour = startTime; hour <= endTime; hour++) {
-                for (var minute = 0; minute < 60; minute += 60) {
-                    var time = (hour < 10 ? "0" + hour : hour) + ":" + (minute === 0 ? "00" : minute);
-                    var row = document.createElement("tr");
-                    var cell = document.createElement("td");
-                    cell.className = "time-slot";
-                    cell.textContent = time;
-                    row.appendChild(cell);
-                    tbody.appendChild(row);
-                }
-            }
+        // red areas where no events can be dropped
+        {
+          start: '2023-01-24',
+          end: '2023-01-28',
+          overlap: false,
+          display: 'background',
+          color: '#ff9f89'
+        },
+        {
+          start: '2023-01-06',
+          end: '2023-01-08',
+          overlap: false,
+          display: 'background',
+          color: '#ff9f89'
         }
+      ]
+    });
 
-        // Call the function to generate time slots when the page loads
-        generateTimeSlots();
-    </script>
+    calendar.render();
+  });
+
+</script>
 
 
+</head>
+
+<body>
+    <div id='calendar'></div>
+
+    {% for test in test2 %}
+{{test.username}}
+    {% endfor %}
 </body>
+
+
 </html>
+
 {% endblock %}
