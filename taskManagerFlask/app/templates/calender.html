@@ -4,83 +4,108 @@
 {% block content %}
 
 <link rel="stylesheet" href="/static/CSS/formstyle.css">
+<link rel="stylesheet" href="/static/CSS/popupstyle.css">
 
 <html>
 <head>
     <br>
 <script src='/static/JS/index.global.js'></script>
 <script>
+  var isAdmin = ("{{current_user.admin}}" === "True")
+
+</script>
+<script>
+
+
 
   document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
 
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-      },
-    
-      navLinks: true, // can click day/week names to navigate views
-      businessHours: true,
-      editable: true,
-      selectable: true,
-      firstDay: 1,
-      events: [
-        {
-          title: 'Det er første maj i dag',
-          start: '2024-05-01T13:00:00',
-          constraint: 'businessHours'
-        },
-        {
-          title: 'Meeting',
-          start: '2023-01-13T11:00:00',
-          constraint: 'availableForMeeting', // defined below
-          color: '#257e4a'
-        },
-        {
-          title: 'Conference',
-          start: '2023-01-18',
-          end: '2023-01-20'
-        },
-        {
-          title: 'Party',
-          start: '2023-01-29T20:00:00'
-        },
+    fetch("/getevents").then((response) => response.json().then(json => loadCalendar(json)));
 
-        // areas where "Meeting" must be dropped
-        {
-          groupId: 'availableForMeeting',
-          start: '2023-01-11T10:00:00',
-          end: '2023-01-11T16:00:00',
-          display: 'background'
-        },
-        {
-          groupId: 'availableForMeeting',
-          start: '2023-01-13T10:00:00',
-          end: '2023-01-13T16:00:00',
-          display: 'background'
-        },
+    const loadCalendar = (allEvents) => {
 
-        // red areas where no events can be dropped
-        {
-          start: '2023-01-24',
-          end: '2023-01-28',
-          overlap: false,
-          display: 'background',
-          color: '#ff9f89'
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
         },
-        {
-          start: '2023-01-06',
-          end: '2023-01-08',
-          overlap: false,
-          display: 'background',
-          color: '#ff9f89'
-        }
-      ]
-    });
+      
+        navLinks: true, // can click day/week names to navigate views
+        businessHours: true,
+        // editable: true,
+        selectable: true,
+        firstDay: 1,
+        fixedWeekCount: false,
+        eventClick: function(evt) {
 
-    calendar.render();
+          let popUpDialog = document.getElementById("popUp");
+          popUpDialog.dataset.active = "";
+
+          let updateForm = document.querySelector("#popUp form#completeTaskForm");
+          if(updateForm) {
+            updateForm.style.display = '';
+          }
+          // sluk for create form
+          let createForm = document.querySelector("#popUp form#createTaskForm");
+          if(createForm) {
+            createForm.style.display = 'none';
+          }
+          let deleteButton = updateForm.querySelector("button#deleteEvent[type='submit']");
+          if(deleteButton && isAdmin !== true) {
+            deleteButton.style.display = 'none';
+          }
+
+          if (isAdmin === true) {
+            updateForm.querySelector("input#eventName").readOnly = false;
+            updateForm.querySelector("textarea#eventDescription").readOnly = false;
+          }
+
+          let id = evt.event.id;
+          let eventName = evt.event.title;
+          let description = evt.event.extendedProps?.description ?? "";
+          let status = evt.event.extendedProps?.status ?? "pending";
+
+          updateForm.querySelector(`input[name="id"]`).value = id;
+          updateForm.querySelector(`input[name="eventname"]`).value = eventName;
+          updateForm.querySelector("textarea#eventDescription").textContent=description;
+          updateForm.querySelector(`input[type="radio"][name="status"][value="${status}"]`).checked = true;
+
+          console.log('an event has been clicked :O👲', evt);
+
+        },
+        dateClick: function(event) {
+          if (isAdmin !== true) { return; }
+
+          console.log('a date has been clicked!', event);
+          let popUpDialog = document.getElementById("popUp");
+          popUpDialog.dataset.active = ""
+
+          // sluk for complete form
+          let completeForm = document.querySelector("#popUp form#completeTaskForm");
+          if(completeForm) {
+            completeForm.style.display = 'none';
+          }
+          let createForm = document.querySelector("#popUp form#createTaskForm");
+          if(createForm) {
+            createForm.style.display = '';
+          }
+
+          let dateElement = document.querySelector("#popUp form#createTaskForm input[name='startDate']");
+          if(dateElement) {
+            dateElement.setAttribute("value", event.dateStr);
+          }
+
+
+        },
+        events: allEvents 
+              
+
+      });
+
+      calendar.render();
+    }
   });
 
 </script>
@@ -90,11 +115,89 @@
 
 <body>
     <div id='calendar'></div>
+    <div id="popUp">
+      <form id="createTaskForm" action="./addTask" method="post">
+        <label>Hurra, nu kan du oprette et nyt event :)</label>
 
-    {% for test in test2 %}
-{{test.username}}
+        {{ form.id }}
+
+        {{ form.eventname.label }}
+        {{ form.eventname(size=100) }}
+        {% for error in form.eventname.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ form.description.label }}
+        {{ form.description(size=500) }}
+        {% for error in form.description.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ form.startDate.label }}
+        {{ form.startDate(size=50, type="date") }}
+        {% for error in form.startDate.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ form.endDate.label }}
+        {{ form.endDate(size=50, type="date") }}
+        {% for error in form.endDate.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+
+        {{ form.createEvent }}
+        <a href="/index">Cancel</a>
+        <button type="reset">reset</button>
+        
+    </form>
+    <form id="completeTaskForm" action="./updateTask" method="post">
+      {{ form.id }}
+
+      <label>Event name</label>
+      <input type="text" readonly id="eventName" name="eventname" value="">
+      
+      <label>Description</label>
+      <textarea readonly id="eventDescription" name="description"></textarea>
+½
+      <label>Status</label>
+      <label>
+        <input type="radio" name="status" value="pending">Pending
+      </label>
+      <label>
+        <input type="radio" name="status" value="assigned">Assigned
+      </label>
+      <label>
+        <input type="radio" name="status" value="done">Done
+      </label>
+
+      <button type="submit">Update task</button>
+      {{ form.removeEvent }}
+        <!-- <input type="hidden" name="removeEvent" value="">  -->
+      <button type="submit" id="deleteEvent" onclick="markTaskForRemoval()">Remove task</button>  
+
+      <button type="reset" onclick="cancelPopUp()">Cancel</button>
+
+      <script>
+        function cancelPopUp() {
+          let popUpDialog = document.getElementById("popUp");
+          delete popUpDialog.dataset.active; 
+        }
+        function markTaskForRemoval() {
+          let removeTask = document.querySelector(`form#completeTaskForm input[name="removeEvent"]`);
+          removeTask.value="remove";
+        }
+
+      </script>
+      
+
+    </form>
+    </div>
+
+    {% for test in testing %}
+      {{test.username}} {{"#"}} {{test.admin}} 
     {% endfor %}
-</body>
+
+  </body>
 
 
 </html>
