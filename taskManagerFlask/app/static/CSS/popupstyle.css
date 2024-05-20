@@ -18,29 +18,34 @@
 }
 
 #popUp form {
+    max-width: 400px;
+    width: 50vw;
+    min-width: 200px;
+    
     flex-direction: column;
     display: flex;
     padding: 30px;
     border-radius: 7px;
     background-color: white;
     filter: drop-shadow(2px 4px 6px black);
+    gap: 2px
 }
 
 .status-pending {
-    --fc-event-text-color: white;
+    --fc-event-text-color: black;
     color: black;
-    background-color: red;
-    border-color: aqua;
+    background-color: #c6c5b9;
+
 }
 .status-assigned {
-    --fc-event-text-color: white;
+    --fc-event-text-color: black;
     color: black;
-    background-color: orange;
-    border-color: aqua;
+    background-color: #62929E;
+
 }
 .status-done {
-    --fc-event-text-color: white;
+    --fc-event-text-color: black;
     color: black;
-    background-color: green;
-    border-color: blue;
+    background-color: #4A6D7C;
+
 }

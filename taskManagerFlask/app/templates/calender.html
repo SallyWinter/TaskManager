@@ -16,8 +16,6 @@
 </script>
 <script>
 
-
-
   document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
 
@@ -72,13 +70,10 @@
           updateForm.querySelector("textarea#eventDescription").textContent=description;
           updateForm.querySelector(`input[type="radio"][name="status"][value="${status}"]`).checked = true;
 
-          console.log('an event has been clicked :O👲', evt);
-
         },
         dateClick: function(event) {
           if (isAdmin !== true) { return; }
 
-          console.log('a date has been clicked!', event);
           let popUpDialog = document.getElementById("popUp");
           popUpDialog.dataset.active = ""
 
@@ -96,7 +91,6 @@
           if(dateElement) {
             dateElement.setAttribute("value", event.dateStr);
           }
-
 
         },
         events: allEvents 
@@ -117,7 +111,7 @@
     <div id='calendar'></div>
     <div id="popUp">
       <form id="createTaskForm" action="./addTask" method="post">
-        <label>Hurra, nu kan du oprette et nyt event :)</label>
+        <label>Create an event: </label>
 
         {{ form.id }}
 
@@ -146,8 +140,8 @@
         {% endfor %}
 
         {{ form.createEvent }}
-        <a href="/index">Cancel</a>
-        <button type="reset">reset</button>
+        <button type="reset">Reset</button>
+        <button type="button" onclick="cancelPopUp()">Cancel</button>
         
     </form>
     <form id="completeTaskForm" action="./updateTask" method="post">
@@ -158,7 +152,7 @@
       
       <label>Description</label>
       <textarea readonly id="eventDescription" name="description"></textarea>
-½
+
       <label>Status</label>
       <label>
         <input type="radio" name="status" value="pending">Pending
@@ -172,8 +166,10 @@
 
       <button type="submit">Update task</button>
       {{ form.removeEvent }}
-        <!-- <input type="hidden" name="removeEvent" value="">  -->
+
       <button type="submit" id="deleteEvent" onclick="markTaskForRemoval()">Remove task</button>  
+
+      
 
       <button type="reset" onclick="cancelPopUp()">Cancel</button>
 
@@ -189,14 +185,8 @@
 
       </script>
       
-
     </form>
     </div>
-
-    {% for test in testing %}
-      {{test.username}} {{"#"}} {{test.admin}} 
-    {% endfor %}
-
   </body>
 
 

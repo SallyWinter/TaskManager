@@ -25,12 +25,10 @@ def load_user(id):
 class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), index=True)
+    name = db.Column(db.String(256), index=True)
     description = db.Column(db.String(256), index=True)
     startDateTime = db.Column(db.String(32), index=True)
     endDateTime = db.Column(db.String(32), index=True)
-    users = db.Column(db.String(64), index=True)
-    admins = db.Column(db.String(64), index=True)
     status = db.Column(db.String(32), index=True, default="pending")
 
     def __repr__(self):
