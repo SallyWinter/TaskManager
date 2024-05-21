@@ -3,7 +3,6 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="/static/CSS/formstyle.css">
 <link rel="stylesheet" href="/static/CSS/popupstyle.css">
 
 <html>
@@ -12,7 +11,6 @@
 <script src='/static/JS/index.global.js'></script>
 <script>
   var isAdmin = ("{{current_user.admin}}" === "True")
-
 </script>
 <script>
 
@@ -32,7 +30,6 @@
       
         navLinks: true, // can click day/week names to navigate views
         businessHours: true,
-        // editable: true,
         selectable: true,
         firstDay: 1,
         fixedWeekCount: false,
@@ -111,17 +108,17 @@
     <div id='calendar'></div>
     <div id="popUp">
       <form id="createTaskForm" action="./addTask" method="post">
-        <label>Create an event: </label>
+        <label>Create a task: </label>
 
         {{ form.id }}
 
-        {{ form.eventname.label }}
+        <label>Task name</label>
         {{ form.eventname(size=100) }}
         {% for error in form.eventname.errors %}
         <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
 
-        {{ form.description.label }}
+        <label>Task description</label>
         {{ form.description(size=500) }}
         {% for error in form.description.errors %}
         <span style="color: red;">[{{ error }}]</span>
@@ -147,13 +144,13 @@
     <form id="completeTaskForm" action="./updateTask" method="post">
       {{ form.id }}
 
-      <label>Event name</label>
+      <label>Task name</label>
       <input type="text" readonly id="eventName" name="eventname" value="">
       
-      <label>Description</label>
+      <label>Task description</label>
       <textarea readonly id="eventDescription" name="description"></textarea>
 
-      <label>Status</label>
+      <label>Task status</label>
       <label>
         <input type="radio" name="status" value="pending">Pending
       </label>

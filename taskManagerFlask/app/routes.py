@@ -19,7 +19,7 @@ def index():
         allEvents = Event.query.all()
         eventForm = EventForm()
         eventForm.id.data = "-1"
-        return render_template('calender.html', testing=allUsers, form=eventForm, testing2=allEvents)
+        return render_template('calender.html', form=eventForm)
         
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -68,8 +68,6 @@ def update_task():
         
         id = eventForm.id.data
 
-        print("admin får dette:", vars(eventForm.eventname))
-
         event = Event.query.get(int(id))
 
         if eventForm.removeEvent.data == "remove":
@@ -83,7 +81,7 @@ def update_task():
             event.status = newStatus
             event.name = newEventName
             event.description = newEventDescription 
-            # de andre felter... (readonly for burgeren)
+            # de andre felter... (readonly for brugeren)
             db.session.commit()
 
     else:
@@ -104,7 +102,6 @@ def add_task():
     if current_user.admin != True:
         return redirect(url_for("index"))
 
-
     eventForm = EventForm()
     eventForm.validate()
     newEvent = Event(
@@ -112,8 +109,6 @@ def add_task():
         description=eventForm.description.data,
         startDateTime=eventForm.startDate.data,
         endDateTime=eventForm.endDate.data,
-        # users=eventForm.users.data,
-        # admins=eventForm.admins.data,
     )
     db.session.add(newEvent)
     db.session.commit()
