@@ -20,7 +20,6 @@ def index():
         eventForm = EventForm()
         eventForm.id.data = "-1"
         return render_template('calender.html', form=eventForm)
-        
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -114,7 +113,6 @@ def add_task():
     db.session.commit()
     flash('Task added successfully!', 'success')
     return redirect(url_for('index'))
-
 
 @app.route('/getevents', methods=['GET'])
 def get_events():

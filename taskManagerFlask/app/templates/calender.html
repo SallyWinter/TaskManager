@@ -91,7 +91,6 @@
 
         },
         events: allEvents 
-              
 
       });
 
@@ -100,7 +99,6 @@
   });
 
 </script>
-
 
 </head>
 
@@ -165,9 +163,6 @@
       {{ form.removeEvent }}
 
       <button type="submit" id="deleteEvent" onclick="markTaskForRemoval()">Remove task</button>  
-
-      
-
       <button type="reset" onclick="cancelPopUp()">Cancel</button>
 
       <script>
@@ -175,17 +170,16 @@
           let popUpDialog = document.getElementById("popUp");
           delete popUpDialog.dataset.active; 
         }
+
         function markTaskForRemoval() {
           let removeTask = document.querySelector(`form#completeTaskForm input[name="removeEvent"]`);
           removeTask.value="remove";
         }
 
       </script>
-      
     </form>
     </div>
   </body>
-
 
 </html>
 
